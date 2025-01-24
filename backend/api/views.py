@@ -4,6 +4,8 @@ from rest_framework.response import Response
 from django.conf import settings
 from io import BytesIO
 import base64
+import requests
+from django.http import HttpResponse
 
 
 
@@ -17,8 +19,5 @@ def generate_image(request):
     
     return Response({'image': img_str})
 
-@api_view(['POST'])
-def generate_audio(request):
-    client = InferenceClient("2Noise/ChatTTS", token=settings.HF_API_KEY)
-    audio = client.text_to_speech("Hello, how are you doing today?")
-    return Response({'audio': audio})
+# @api_view(['POST'])
+# def generate_audio(request):
