@@ -3,12 +3,13 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { getBackendApiUrl } from "@/lib/utils"; // Adjust path if needed
+import Image from "next/image";
 
-interface GenerateArtFormProps {
-  // You can define props if needed, but in this case, we don't need any props passed from the parent SSR page
-}
+// interface GenerateArtFormProps {
+//   // You can define props if needed, but in this case, we don't need any props passed from the parent SSR page
+// }
 
-const GenerateArtForm: React.FC<GenerateArtFormProps> = () => {
+const GenerateArtForm: React.FC = () => {
   const [prompt, setPrompt] = useState("");
   const [generatedImageBase64, setGeneratedImageBase64] = useState<
     string | null
@@ -40,7 +41,7 @@ const GenerateArtForm: React.FC<GenerateArtFormProps> = () => {
       } else {
         setError(`Error generating art. Status: ${response.status}`);
       }
-    } catch (e: any) {
+    } catch (e) {
       console.error("Error during API request:", e);
       setError("Failed to generate art. Please try again.");
     } finally {
@@ -88,10 +89,12 @@ const GenerateArtForm: React.FC<GenerateArtFormProps> = () => {
       {generatedImageBase64 && (
         <div className="mt-4">
           <h2 className="text-lg font-semibold mb-2">Generated Image:</h2>
-          <img
+          <Image
             src={`data:image/png;base64,${generatedImageBase64}`}
             alt="Generated AI Art"
             className="max-w-full h-auto rounded-lg shadow-md"
+            width={800}
+            height={800}
           />
         </div>
       )}
