@@ -11,8 +11,9 @@ from django.http import HttpResponse
 
 @api_view(['POST'])
 def generate_image(request):
-    client = InferenceClient("black-forest-labs/FLUX.1-dev", token=settings.HF_API_KEY)
-    image = client.text_to_image("Astronaut riding a horse")
+    client = InferenceClient("stabilityai/stable-diffusion-3.5-large", token=settings.HF_API_KEY)
+    prompt = request.data['prompt']
+    image = client.text_to_image(prompt)
     buffered = BytesIO()
     image.save(buffered, format="JPEG")
     img_str = base64.b64encode(buffered.getvalue()).decode('utf-8')
