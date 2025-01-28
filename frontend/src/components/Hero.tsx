@@ -6,6 +6,8 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 
+import { Button } from "@/components/ui/button";
+
 import {
   Card,
   CardContent,
@@ -17,9 +19,9 @@ import {
 
 export default function Hero() {
   return (
-    <div className="animated-background h-full bg-gradient-to-r from-violet-950 via-blue-950 to-indigo-900">
+    <div>
       <div className="flex flex-col items-center h-full">
-        <h1 className="text-6xl font-bold text-white mt-32 mb-24">
+        <h1 className="text-6xl font-bold text-foreground mt-32 mb-24">
           Check our most recent <i>art pieces</i>
         </h1>
         <Carousel>
@@ -41,12 +43,10 @@ export default function Hero() {
           <CarouselPrevious />
           <CarouselNext />
         </Carousel>
-        <p className="text-xl text-white">
+        <p className="text-xl text-foreground">
           A sensory audiovisual canvas for AI-generated art
         </p>
-        <button className="mt-4 px-4 py-2 text-white bg-blue-500 rounded-lg">
-          Get started
-        </button>
+        <Button className="mt-4 px-4 py-2 rounded-lg">Get started</Button>
       </div>
     </div>
   );

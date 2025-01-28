@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { getBackendApiUrl } from "@/lib/utils"; // Adjust path if needed
 import Image from "next/image";
+import { Button } from "./ui/button";
 
 // interface GenerateArtFormProps {
 //   // You can define props if needed, but in this case, we don't need any props passed from the parent SSR page
@@ -55,26 +56,26 @@ const GenerateArtForm: React.FC = () => {
         <div className="mb-4">
           <label
             htmlFor="prompt"
-            className="block text-gray-700 text-sm font-bold mb-2"
+            className="block text-foreground text-sm font-bold mb-2"
           >
             Enter your prompt:
           </label>
           <input
             type="text"
             id="prompt"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="bg-input text-foreground shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
             placeholder="e.g., A futuristic cityscape at sunset"
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
           />
         </div>
-        <button
+        <Button
           type="submit"
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          className="bg-primary font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           disabled={loading}
         >
           {loading ? "Generating..." : "Generate Art"}
-        </button>
+        </Button>
       </form>
       {error && (
         <div

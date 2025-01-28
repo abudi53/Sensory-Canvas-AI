@@ -4,13 +4,14 @@ from rest_framework.response import Response
 from django.conf import settings
 from io import BytesIO
 import base64
-import requests
-from django.http import HttpResponse
 from PIL import Image
+from django.views.decorators.csrf import csrf_exempt
+
 
 
 
 @api_view(['POST'])
+@csrf_exempt
 def generate_image(request):
     client = InferenceClient("stabilityai/stable-diffusion-3.5-large", token=settings.HF_API_KEY)
     prompt = request.data.get('prompt')
