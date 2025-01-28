@@ -21,8 +21,8 @@ export default function Hero() {
   return (
     <div>
       <div className="flex flex-col items-center h-full">
-        <h1 className="text-6xl font-bold text-foreground mt-32 mb-24">
-          Check our most recent <i>art pieces</i>
+        <h1 className="text-6xl font-bold text-foreground mt-16 mb-12">
+          Check our most recent <i className="dark-melting-text">art pieces</i>
         </h1>
         <Carousel>
           <CarouselContent>

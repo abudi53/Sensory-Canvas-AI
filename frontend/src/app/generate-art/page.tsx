@@ -3,7 +3,7 @@ import GenerateArtForm from "@/components/GenerateArtForm"; // Adjust path if ne
 export default function GenerateArtPage() {
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">AI Modern Art Generator</h1>
+      <h1 className="text-2xl font-bold mb-4">Image and Sound Art Generator</h1>
       <GenerateArtForm />
     </div>
   );

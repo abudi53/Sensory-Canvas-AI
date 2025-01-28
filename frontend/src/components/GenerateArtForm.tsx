@@ -63,7 +63,7 @@ const GenerateArtForm: React.FC = () => {
           <input
             type="text"
             id="prompt"
-            className="bg-input text-foreground shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
+            className="bg-input text-foreground shadow appearance-none border rounded w-full py-2 px-3 leading-tight"
             placeholder="e.g., A futuristic cityscape at sunset"
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}

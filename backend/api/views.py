@@ -7,9 +7,6 @@ import base64
 from PIL import Image
 from django.views.decorators.csrf import csrf_exempt
 
-
-
-
 @api_view(['POST'])
 @csrf_exempt
 def generate_image(request):

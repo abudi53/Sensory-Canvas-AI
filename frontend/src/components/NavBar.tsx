@@ -16,18 +16,23 @@ export default function NavBar() {
       <NavigationMenu className="sticky top-0 z-10 shadow-md flex p-4 px-10 w-full justify-between max-w-full">
         <NavigationMenuList className="flex space-x-4">
           <NavigationMenuItem>
-            <Link href="/docs" legacyBehavior passHref>
+            <Link href="/" passHref>
               <h1 className="text-xl font-bold">Sensory Canvas AI 🎨</h1>
             </Link>
           </NavigationMenuItem>
         </NavigationMenuList>
         <NavigationMenuList className="flex space-x-4">
           <NavigationMenuItem>
-            <Link href="/docs" legacyBehavior passHref>
+            <Link href="/contact" legacyBehavior passHref>
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Docs
+                Contact
               </NavigationMenuLink>
-            </Link>
+            </Link>{" "}
+            <Link href="/generate-art" legacyBehavior passHref>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                Generate Art
+              </NavigationMenuLink>
+            </Link>{" "}
           </NavigationMenuItem>
           <NavigationMenuItem>
             <ThemeSwitch />
