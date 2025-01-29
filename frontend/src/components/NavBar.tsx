@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import ThemeSwitch from "./ThemeSwitch";
 import Link from "next/link";
+import { logoutAction } from "@/app/actions";
 
 export default function NavBar() {
   return (
@@ -33,6 +34,20 @@ export default function NavBar() {
                 Generate Art
               </NavigationMenuLink>
             </Link>{" "}
+            <NavigationMenuLink
+              className={navigationMenuTriggerStyle()}
+              onClick={async (e) => {
+                e.preventDefault(); // Prevent default navigation
+                try {
+                  await logoutAction(); // Await the logout action
+                } catch (error) {
+                  console.error("Logout failed:", error);
+                  // Optionally, display an error message to the user
+                }
+              }}
+            >
+              Sign out
+            </NavigationMenuLink>
           </NavigationMenuItem>
           <NavigationMenuItem>
             <ThemeSwitch />
