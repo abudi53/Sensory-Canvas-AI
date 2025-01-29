@@ -9,7 +9,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('username', 'password', 'password2', 'email', 'first_name', 'last_name') # Include fields you want to expose
+        fields = ('username', 'password', 'password2', 'email') # Include fields you want to expose
         extra_kwargs = {
             'password': {'write_only': True},
             'password2': {'write_only': True}

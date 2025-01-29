@@ -62,7 +62,7 @@ const Navbar = ({ user }: NavbarProps) => {
                 </NavigationMenuLink>
               </Link>
             ) : (
-              <Link href="/login" legacyBehavior passHref>
+              <Link href="/sign-in" legacyBehavior passHref>
                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                   Sign in
                 </NavigationMenuLink>

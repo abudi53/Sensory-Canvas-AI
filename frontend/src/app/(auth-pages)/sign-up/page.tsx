@@ -1,25 +1,13 @@
-import { signUpAction } from "@/app/actions";
+import { registerAction } from "@/app/actions";
 import { FormMessage, Message } from "@/components/form-message";
 import { SubmitButton } from "@/components/submit-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { SmtpMessage } from "../smtp-message";
-import { createClient } from "@/utils/supabase/server";
-import { redirect } from "next/navigation";
 
 export default async function Signup(props: {
   searchParams: Promise<Message>;
 }) {
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (user) {
-    return redirect("/");
-  }
   const searchParams = await props.searchParams;
   if ("message" in searchParams) {
     return (
@@ -42,6 +30,8 @@ export default async function Signup(props: {
         <div className="flex flex-col gap-2 [&>input]:mb-3 mt-8">
           <Label htmlFor="email">Email</Label>
           <Input name="email" placeholder="you@example.com" required />
+          <Label htmlFor="username">Username</Label>
+          <Input name="username" placeholder="Your username" required />
           <Label htmlFor="password">Password</Label>
           <Input
             type="password"
@@ -50,13 +40,15 @@ export default async function Signup(props: {
             minLength={6}
             required
           />
-          <SubmitButton formAction={signUpAction} pendingText="Signing up...">
+          <Label htmlFor="password2">Confirm your password</Label>
+          <Input type="password" name="password2" minLength={6} required />
+
+          <SubmitButton formAction={registerAction} pendingText="Signing up...">
             Sign up
           </SubmitButton>
           <FormMessage message={searchParams} />
         </div>
       </form>
-      <SmtpMessage />
     </>
   );
 }
