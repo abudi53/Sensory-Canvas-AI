@@ -61,6 +61,14 @@ class LogoutView(generics.GenericAPIView):
         except Exception as e:
             return Response({"error": "Invalid token."}, status=status.HTTP_400_BAD_REQUEST)
         
+
+class UserDetailView(generics.RetrieveAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = UserSerializer
+
+    def get_object(self):
+        return self.request.user
+
 class SaveArtView(generics.CreateAPIView):
     serializer_class = GeneratedArtSerializer
     permission_classes = [permissions.IsAuthenticated] # Require authentication to save art

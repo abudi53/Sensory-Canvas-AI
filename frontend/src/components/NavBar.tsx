@@ -11,7 +11,18 @@ import ThemeSwitch from "./ThemeSwitch";
 import Link from "next/link";
 import { logoutAction } from "@/app/actions";
 
-export default function NavBar() {
+interface User {
+  username: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+}
+
+interface NavbarProps {
+  user: User;
+}
+
+const Navbar = ({ user }: NavbarProps) => {
   return (
     <nav className="w-full">
       <NavigationMenu className="sticky top-0 z-10 shadow-md flex p-4 px-10 w-full justify-between max-w-full">
@@ -34,20 +45,29 @@ export default function NavBar() {
                 Generate Art
               </NavigationMenuLink>
             </Link>{" "}
-            <NavigationMenuLink
-              className={navigationMenuTriggerStyle()}
-              onClick={async (e) => {
-                e.preventDefault(); // Prevent default navigation
-                try {
-                  await logoutAction(); // Await the logout action
-                } catch (error) {
-                  console.error("Logout failed:", error);
-                  // Optionally, display an error message to the user
-                }
-              }}
-            >
-              Sign out
-            </NavigationMenuLink>
+            {user ? (
+              <Link href={"/"} legacyBehavior passHref>
+                <NavigationMenuLink
+                  className={navigationMenuTriggerStyle()}
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    try {
+                      await logoutAction();
+                    } catch (error) {
+                      console.error("Logout failed:", error);
+                    }
+                  }}
+                >
+                  Sign out
+                </NavigationMenuLink>
+              </Link>
+            ) : (
+              <Link href="/login" legacyBehavior passHref>
+                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                  Sign in
+                </NavigationMenuLink>
+              </Link>
+            )}
           </NavigationMenuItem>
           <NavigationMenuItem>
             <ThemeSwitch />
@@ -56,4 +76,6 @@ export default function NavBar() {
       </NavigationMenu>
     </nav>
   );
-}
+};
+
+export default Navbar;

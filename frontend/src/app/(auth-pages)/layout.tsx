@@ -7,7 +7,7 @@ export default async function Layout({
 }) {
   return (
     <div className="flex flex-col items-center pt-8 min-h-screen">
-      <Card className="max-w-fit flex flex-col gap-12 items-center p-8">
+      <Card className="max-w-fit flex flex-col gap-12 items-center px-12 py-8">
         <div>{children}</div>
       </Card>
     </div>

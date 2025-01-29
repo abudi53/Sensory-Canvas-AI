@@ -17,6 +17,7 @@ export async function middleware(request: NextRequest) {
 
   // Public routes
   const publicRoutes = ["/login", "/register"];
+  const protectedRoutes = ["/saved-art"];
 
   // If user is authenticated and tries to access public routes, redirect to dashboard
   if (accessToken && publicRoutes.includes(pathname)) {
@@ -24,9 +25,9 @@ export async function middleware(request: NextRequest) {
   }
 
   // Protected routes
-  // if (!accessToken && !publicRoutes.includes(pathname)) {
-  //   return NextResponse.redirect(new URL("/login", request.url));
-  // }
+  if (!accessToken && protectedRoutes.includes(pathname)) {
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
 
   return NextResponse.next();
 }

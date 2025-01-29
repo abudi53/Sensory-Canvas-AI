@@ -10,5 +10,6 @@ urlpatterns = [
     path('logout/', views.LogoutView.as_view(), name='logout'),     # Logout endpoint (token blacklist)
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'), # Token refresh endpoint (from simplejwt)
     path('save-art/', views.SaveArtView.as_view(), name='save_art'), # Save art endpoint
+    path('user/', views.UserDetailView.as_view(), name='user_detail'),
 ]
 
