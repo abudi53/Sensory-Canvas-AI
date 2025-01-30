@@ -6,6 +6,7 @@ import { getBackendApiUrl } from "@/lib/utils"; // Adjust path if needed
 import Image from "next/image";
 import { Button } from "./ui/button";
 import { Skeleton } from "./ui/skeleton";
+import { Textarea } from "./ui/textarea";
 
 // interface GenerateArtFormProps {
 //   // You can define props if needed, but in this case, we don't need any props passed from the parent SSR page
@@ -61,10 +62,9 @@ const GenerateArtForm: React.FC = () => {
           >
             Enter your prompt:
           </label>
-          <input
-            type="text"
+          <Textarea
             id="prompt"
-            className="bg-input text-foreground shadow appearance-none border rounded w-full py-2 px-3 leading-tight"
+            className="bg-input text-foreground shadow appearance-none border rounded w-full py-2 px-3 leading-tight resize-none outline-none"
             placeholder="e.g., A futuristic cityscape at sunset"
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
@@ -99,6 +99,7 @@ const GenerateArtForm: React.FC = () => {
               width={1280}
               height={720}
             />
+            <Button className="font-bold mt-2">Save Art</Button>
           </div>
         )}
       </div>
