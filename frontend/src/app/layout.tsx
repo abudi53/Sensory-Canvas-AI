@@ -6,6 +6,7 @@ import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import { ThemeProvider } from "@/components/theme-provider";
 import { getCurrentUser } from "@/lib/auth";
+import { SoundControlProvider } from "@/context/SoundControlContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -46,7 +47,9 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           <NavBar user={currentUser} />
-          <RootLayoutClient>{children}</RootLayoutClient>
+          <SoundControlProvider>
+            <RootLayoutClient>{children}</RootLayoutClient>
+          </SoundControlProvider>
           <Footer />
         </ThemeProvider>
       </body>

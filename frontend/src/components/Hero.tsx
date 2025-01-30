@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Carousel,
   CarouselContent,
@@ -6,7 +8,8 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import Link from "next/link";
-
+import React, { useEffect, useState, useContext } from "react";
+import { type CarouselApi } from "@/components/ui/carousel";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
@@ -19,14 +22,34 @@ import {
   //   CardTitle,
 } from "@/components/ui/card";
 
+import { SoundButton } from "./SoundButton";
+import SoundControlContext from "@/context/SoundControlContext";
+
 export default function Hero() {
+  const [api, setApi] = useState<CarouselApi>();
+
+  const { stopAllSounds } = useContext(SoundControlContext);
+
+  useEffect(() => {
+    const handleSlideChange = () => {
+      stopAllSounds();
+    };
+
+    if (!api) return;
+
+    api.on("select", handleSlideChange);
+    return () => {
+      api.off("select", handleSlideChange);
+    };
+  }, [api, stopAllSounds]);
+
   return (
     <div>
       <div className="flex flex-col items-center h-full">
         <h1 className="text-6xl font-bold text-foreground mt-16 mb-12">
           Check our most recent <i className="dark-melting-text">art pieces</i>
         </h1>
-        <Carousel className="w-[50vw]">
+        <Carousel className="w-[50vw]" setApi={setApi}>
           <CarouselContent>
             <CarouselItem>
               <div className="p-1">
@@ -39,10 +62,11 @@ export default function Hero() {
                       height={360}
                     />
                   </CardContent>
-                  <CardFooter className="flex justify-center">
+                  <CardFooter className="flex justify-center gap-4">
                     <span className="text-lg font-semibold">
                       Old man besides a mustang
                     </span>
+                    <SoundButton url="/art/sound/old-man.mp3" />
                   </CardFooter>
                 </Card>
               </div>
@@ -58,10 +82,11 @@ export default function Hero() {
                       height={360}
                     />
                   </CardContent>
-                  <CardFooter className="flex justify-center">
+                  <CardFooter className="flex justify-center gap-4">
                     <span className="text-lg font-semibold">
                       Skeletons playing poker
                     </span>
+                    <SoundButton url="/art/sound/skeletons.mp3" />
                   </CardFooter>
                 </Card>
               </div>
@@ -77,10 +102,11 @@ export default function Hero() {
                       height={360}
                     />
                   </CardContent>
-                  <CardFooter className="flex justify-center">
+                  <CardFooter className="flex justify-center gap-4">
                     <span className="text-lg font-semibold">
                       Happy with life
                     </span>
+                    <SoundButton url="/art/sound/happy.mp3" />
                   </CardFooter>
                 </Card>
               </div>
@@ -96,10 +122,11 @@ export default function Hero() {
                       height={360}
                     />
                   </CardContent>
-                  <CardFooter className="flex justify-center">
+                  <CardFooter className="flex justify-center gap-4">
                     <span className="text-lg font-semibold">
                       Coming back from the beach
                     </span>
+                    <SoundButton url="/art/sound/riding.mp3" />
                   </CardFooter>
                 </Card>
               </div>
