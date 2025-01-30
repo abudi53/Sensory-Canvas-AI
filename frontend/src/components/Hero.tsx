@@ -50,36 +50,57 @@ export default function Hero() {
             <CarouselItem>
               <div className="p-1">
                 <Card>
-                  <CardContent className="flex aspect-16/9 h-full items-center justify-center p-6">
-                    <span className="text-4xl font-semibold">{1}</span>
+                  <CardContent className="flex h-full items-center justify-center p-6">
+                    <Image
+                      alt={"Piece of art Skeletons playing poker"}
+                      src={"/art/image/skeletons-playing-poker.png"}
+                      width={640}
+                      height={360}
+                    />
                   </CardContent>
+                  <CardFooter className="flex justify-center">
+                    <span className="text-lg font-semibold">
+                      Skeletons playing poker
+                    </span>
+                  </CardFooter>
                 </Card>
               </div>
             </CarouselItem>
             <CarouselItem>
               <div className="p-1">
                 <Card>
-                  <CardContent className="flex aspect-16/9 h-full items-center justify-center p-6">
-                    <span className="text-4xl font-semibold">{1}</span>
+                  <CardContent className="flex h-full items-center justify-center p-6">
+                    <Image
+                      alt={"Piece of art Happy with life"}
+                      src={"/art/image/happy-with-life.png"}
+                      width={640}
+                      height={360}
+                    />
                   </CardContent>
+                  <CardFooter className="flex justify-center">
+                    <span className="text-lg font-semibold">
+                      Happy with life
+                    </span>
+                  </CardFooter>
                 </Card>
               </div>
             </CarouselItem>
             <CarouselItem>
               <div className="p-1">
                 <Card>
-                  <CardContent className="flex aspect-16/9 h-full items-center justify-center p-6">
-                    <span className="text-4xl font-semibold">{1}</span>
+                  <CardContent className="flex h-full items-center justify-center p-6">
+                    <Image
+                      alt={"Riding back from the beach"}
+                      src={"/art/image/coming-back-from-the-beach.png"}
+                      width={640}
+                      height={360}
+                    />
                   </CardContent>
-                </Card>
-              </div>
-            </CarouselItem>
-            <CarouselItem>
-              <div className="p-1">
-                <Card>
-                  <CardContent className="flex aspect-16/9 h-full items-center justify-center p-6">
-                    <span className="text-4xl font-semibold">{1}</span>
-                  </CardContent>
+                  <CardFooter className="flex justify-center">
+                    <span className="text-lg font-semibold">
+                      Coming back from the beach
+                    </span>
+                  </CardFooter>
                 </Card>
               </div>
             </CarouselItem>
