@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import RootLayoutClient from "../components/RootLayoutClient";
 import "./globals.css";
 import NavBar from "../components/NavBar";
+import Footer from "../components/Footer";
 import { ThemeProvider } from "@/components/theme-provider";
 import { getCurrentUser } from "@/lib/auth";
 
@@ -46,6 +47,7 @@ export default async function RootLayout({
         >
           <NavBar user={currentUser} />
           <RootLayoutClient>{children}</RootLayoutClient>
+          <Footer />
         </ThemeProvider>
       </body>
     </html>
