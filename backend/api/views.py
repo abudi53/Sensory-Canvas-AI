@@ -1,5 +1,6 @@
 from huggingface_hub import InferenceClient
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from .serializers import UserSerializer, LoginSerializer, GeneratedArtSerializer
 from django.contrib.auth.models import User
@@ -15,6 +16,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 @api_view(['POST'])
 @csrf_exempt
+@permission_classes([AllowAny])  # Allow unauthenticated access
 def generate_image(request):
     client = InferenceClient("stabilityai/stable-diffusion-3.5-large", token=settings.HF_API_KEY)
     prompt = request.data.get('prompt')
@@ -23,7 +25,11 @@ def generate_image(request):
         return Response({'error': 'No prompt provided'}, status=400)
     
     try:
-        image = client.text_to_image(prompt)
+        width = 1280   # Width in pixels (16 units)
+        height = 720  # Height in pixels (9 units)
+        
+        # Generate the image with specified dimensions
+        image = client.text_to_image(prompt, width=width, height=height)
         buffered = BytesIO()
         image.save(buffered, format="JPEG")
         img_str = base64.b64encode(buffered.getvalue()).decode('utf-8')

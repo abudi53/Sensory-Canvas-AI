@@ -24,8 +24,8 @@ interface NavbarProps {
 
 const Navbar = ({ user }: NavbarProps) => {
   return (
-    <nav className="w-full">
-      <NavigationMenu className="sticky top-0 z-10 shadow-md flex p-4 px-10 w-full justify-between max-w-full">
+    <nav className="sticky top-0 z-10 shadow-md flex w-full justify-between max-w-full bg-inherit">
+      <NavigationMenu className="flex p-4 px-10 w-full justify-between max-w-full">
         <NavigationMenuList className="flex space-x-4">
           <NavigationMenuItem>
             <Link href="/" passHref>

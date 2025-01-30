@@ -5,6 +5,7 @@ import axios from "axios";
 import { getBackendApiUrl } from "@/lib/utils"; // Adjust path if needed
 import Image from "next/image";
 import { Button } from "./ui/button";
+import { Skeleton } from "./ui/skeleton";
 
 // interface GenerateArtFormProps {
 //   // You can define props if needed, but in this case, we don't need any props passed from the parent SSR page
@@ -51,12 +52,12 @@ const GenerateArtForm: React.FC = () => {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit} className="mb-4">
+    <div className="grid grid-cols-2 gap-8 justify-center h-screen">
+      <form onSubmit={handleSubmit} className="mb-4 mt-4">
         <div className="mb-4">
           <label
             htmlFor="prompt"
-            className="block text-foreground text-sm font-bold mb-2"
+            className="block text-foreground text-lg font-semibold mb-2"
           >
             Enter your prompt:
           </label>
@@ -77,28 +78,30 @@ const GenerateArtForm: React.FC = () => {
           {loading ? "Generating..." : "Generate Art"}
         </Button>
       </form>
-      {error && (
-        <div
-          className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
-          role="alert"
-        >
-          <strong className="font-bold">Error!</strong>
-          <span className="block sm:inline ml-1">{error}</span>
-        </div>
-      )}
-      {loading && <p>Generating art... please wait.</p>}
-      {generatedImageBase64 && (
-        <div className="mt-4">
-          <h2 className="text-lg font-semibold mb-2">Generated Image:</h2>
-          <Image
-            src={`data:image/png;base64,${generatedImageBase64}`}
-            alt="Generated AI Art"
-            className="max-w-full h-auto rounded-lg shadow-md"
-            width={800}
-            height={800}
-          />
-        </div>
-      )}
+      <div>
+        {error && (
+          <div
+            className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
+            role="alert"
+          >
+            <strong className="font-bold">Error!</strong>
+            <span className="block sm:inline ml-1">{error}</span>
+          </div>
+        )}
+        {loading && <Skeleton className="w-full h-[50vh] rounded-xl mt-4" />}
+        {generatedImageBase64 && (
+          <div className="mt-4">
+            <h2 className="text-lg font-semibold mb-2">Generated Image:</h2>
+            <Image
+              src={`data:image/png;base64,${generatedImageBase64}`}
+              alt="Generated AI Art"
+              className="max-w-full h-auto shadow-md"
+              width={1280}
+              height={720}
+            />
+          </div>
+        )}
+      </div>
     </div>
   );
 };
