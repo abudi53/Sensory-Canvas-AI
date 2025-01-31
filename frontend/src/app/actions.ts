@@ -175,10 +175,21 @@ export async function logoutAction() {
   });
 
   return redirect("/sign-in");
-  // } catch (error) {
-  //   // Fallback cleanup in case of network errors
-  //   cookieStore.set("access_token", "", { maxAge: -1, path: "/" });
-  //   cookieStore.set("refresh_token", "", { maxAge: -1, path: "/" });
-  //   return redirect("/login");
-  // }
+}
+
+export async function saveArtAction(formData: FormData) {
+  const response = await serverClient({
+    endpoint: "/user-arts/",
+    method: "POST",
+    body: {
+      prompt: formData.get("prompt"),
+      image_base64: formData.get("image_base64"),
+    },
+  });
+
+  if (response.ok) {
+    return redirect("/");
+  }
+
+  return encodedRedirect("error", "/generate-art", "Art generation failed");
 }

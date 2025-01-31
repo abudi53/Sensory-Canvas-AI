@@ -13,6 +13,7 @@ from io import BytesIO
 import base64
 from PIL import Image
 from django.views.decorators.csrf import csrf_exempt
+from .models import GeneratedArt
 
 @api_view(['POST'])
 @csrf_exempt
@@ -75,9 +76,13 @@ class UserDetailView(generics.RetrieveAPIView):
     def get_object(self):
         return self.request.user
 
-class SaveArtView(generics.CreateAPIView):
+class UserArtsListCreateView(generics.ListCreateAPIView):
     serializer_class = GeneratedArtSerializer
     permission_classes = [permissions.IsAuthenticated] # Require authentication to save art
+
+    def get_queryset(self):
+        # Return only the logged-in user's arts
+        return GeneratedArt.objects.filter(user=self.request.user)
 
     def perform_create(self, serializer):
         # Set the user to the currently authenticated user when saving art

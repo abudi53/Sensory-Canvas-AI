@@ -7,10 +7,7 @@ import Image from "next/image";
 import { Button } from "./ui/button";
 import { Skeleton } from "./ui/skeleton";
 import { Textarea } from "./ui/textarea";
-
-// interface GenerateArtFormProps {
-//   // You can define props if needed, but in this case, we don't need any props passed from the parent SSR page
-// }
+import { saveArtAction } from "@/app/actions";
 
 const GenerateArtForm: React.FC = () => {
   const [prompt, setPrompt] = useState("");
@@ -52,6 +49,25 @@ const GenerateArtForm: React.FC = () => {
     }
   };
 
+  const handleSaveArt = async () => {
+    if (!prompt.trim() || !generatedImageBase64) {
+      setError("No art to save. Please generate art first.");
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append("prompt", prompt);
+      formData.append("image_base64", generatedImageBase64);
+
+      await saveArtAction(formData);
+      // Optional: show a success message or clear fields
+      console.log("Art saved successfully!");
+    } catch {
+      setError("Failed to save art. Please try again.");
+    }
+  };
+
   return (
     <div className="grid grid-cols-2 gap-8 justify-center h-screen">
       <form onSubmit={handleSubmit} className="mb-4 mt-4">
@@ -77,6 +93,7 @@ const GenerateArtForm: React.FC = () => {
         >
           {loading ? "Generating..." : "Generate Art"}
         </Button>
+        <p>(Sound generation api still not available)</p>
       </form>
       <div>
         {error && (
@@ -99,7 +116,9 @@ const GenerateArtForm: React.FC = () => {
               width={1280}
               height={720}
             />
-            <Button className="font-bold mt-2">Save Art</Button>
+            <Button className="font-bold mt-2" onClick={handleSaveArt}>
+              Save Art
+            </Button>
           </div>
         )}
       </div>
