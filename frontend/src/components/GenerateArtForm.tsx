@@ -1,15 +1,15 @@
 "use client";
 
 import React, { useState } from "react";
-import axios from "axios";
-import { getBackendApiUrl } from "@/lib/utils"; // Adjust path if needed
 import Image from "next/image";
 import { Button } from "./ui/button";
 import { Skeleton } from "./ui/skeleton";
 import { Textarea } from "./ui/textarea";
-import { saveArtAction } from "@/app/actions";
+import { saveArtAction, generateArtAction } from "@/app/actions";
+import { useToast } from "@/hooks/use-toast";
 
 const GenerateArtForm: React.FC = () => {
+  const { toast } = useToast();
   const [prompt, setPrompt] = useState("");
   const [generatedImageBase64, setGeneratedImageBase64] = useState<
     string | null
@@ -30,20 +30,14 @@ const GenerateArtForm: React.FC = () => {
     setGeneratedImageBase64(null); // Clear previous image
 
     try {
-      const baseUrl = getBackendApiUrl();
-      const response = await axios.post(`${baseUrl}/generate-image/`, {
-        prompt,
+      await generateArtAction(prompt);
+    } catch (err: unknown) {
+      toast({
+        title: "Error generating art",
+        description:
+          err instanceof Error ? err.message : "An unexpected error occurred.",
+        variant: "destructive",
       });
-
-      if (response.status === 200) {
-        setGeneratedImageBase64(response.data.image); // Assuming backend returns image_base64
-        // You might also receive sound_url here and handle it similarly
-      } else {
-        setError(`Error generating art. Status: ${response.status}`);
-      }
-    } catch (e) {
-      console.error("Error during API request:", e);
-      setError("Failed to generate art. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -61,10 +55,28 @@ const GenerateArtForm: React.FC = () => {
       formData.append("image_base64", generatedImageBase64);
 
       await saveArtAction(formData);
-      // Optional: show a success message or clear fields
-      console.log("Art saved successfully!");
-    } catch {
-      setError("Failed to save art. Please try again.");
+      toast({
+        title: "Art saved!",
+        description: "Your art has been saved successfully.",
+      });
+    } catch (err: unknown) {
+      console.error("Error saving art:", err);
+      if (err instanceof Error && err.message.includes("NEXT_REDIRECT")) {
+        toast({
+          title: "Not signed in",
+          description: "You need to sign in first.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Error saving art",
+          description:
+            err instanceof Error
+              ? err.message
+              : "An unexpected error occurred.",
+          variant: "destructive",
+        });
+      }
     }
   };
 

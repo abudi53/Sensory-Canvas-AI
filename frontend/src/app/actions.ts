@@ -6,7 +6,6 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export async function loginAction(formData: FormData): Promise<void> {
-  // try {
   const response = await serverClient({
     endpoint: "/login/",
     method: "POST",
@@ -21,7 +20,6 @@ export async function loginAction(formData: FormData): Promise<void> {
   if (response.ok) {
     const cookieStore = await cookies();
 
-    // Set cookies with proper configuration
     cookieStore.set("access_token", data.access, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -43,9 +41,6 @@ export async function loginAction(formData: FormData): Promise<void> {
   }
 
   return encodedRedirect("error", "/sign-in", "Login failed");
-  // } catch {
-  //   return encodedRedirect("error", "/login", "Connection error");
-  // }
 }
 
 export async function registerAction(formData: FormData) {
@@ -177,6 +172,95 @@ export async function logoutAction() {
   return redirect("/sign-in");
 }
 
+export async function getCurrentUser() {
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("access_token")?.value;
+
+  if (!accessToken) {
+    return null;
+  }
+
+  try {
+    const response = await serverClient({
+      endpoint: "/user/",
+      method: "GET",
+    });
+
+    if (response.ok) {
+      return response.json();
+    } else if (response.status === 401) {
+      const refreshToken = cookieStore.get("refresh_token")?.value;
+      const refreshResponse = await serverClient({
+        endpoint: "/token/refresh/",
+        method: "POST",
+        body: { refresh: refreshToken },
+      });
+
+      if (!refreshResponse || !refreshResponse.ok) {
+        return null;
+      }
+
+      const { access } = await refreshResponse.json();
+      cookieStore.set("access_token", access, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        path: "/",
+        sameSite: "lax",
+        maxAge: 60 * 60 * 24 * 7, // 1 week
+      });
+      return response;
+    }
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      // return encodedRedirect("error", "/sign-in", "error");
+      console.error("getCurrentUser error:", error);
+    }
+  }
+}
+
+// export async function refreshTokensAction() {
+//   const cookieStore = await cookies();
+//   const refreshToken = cookieStore.get("refresh_token")?.value;
+
+//   if (!refreshToken) {
+//     return encodedRedirect("error", "/sign-in", "No refresh token found.");
+//   }
+
+//   try {
+//     const response = await serverClient({
+//       endpoint: "/token/refresh/",
+//       method: "POST",
+//       body: { refresh: refreshToken },
+//     });
+
+//     if (!response.ok) {
+//       return encodedRedirect("error", "/sign-in", "Token refresh failed.");
+//     } else {
+//       return response;
+//     }
+//   } catch (error: unknown) {
+//     if (error instanceof Error) {
+//       return encodedRedirect("error", "/sign-in", "refresh action");
+//     }
+//   }
+// }
+
+export async function generateArtAction(prompt: string) {
+  const response = await serverClient({
+    endpoint: "/generate-image/",
+    method: "POST",
+    body: { prompt },
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      `Failed with status ${response.status}: ${await response.text()}`
+    );
+  }
+
+  return response.json();
+}
+
 export async function saveArtAction(formData: FormData) {
   const response = await serverClient({
     endpoint: "/user-arts/",
@@ -187,9 +271,13 @@ export async function saveArtAction(formData: FormData) {
     },
   });
 
-  if (response.ok) {
-    return redirect("/");
+  // Explicitly check if the response is not OK
+  if (!response.ok) {
+    if (response.status === 401) {
+      redirect("/sign-in");
+    }
+    throw new Error(
+      `Failed with status ${response.status}: ${await response.text()}`
+    );
   }
-
-  return encodedRedirect("error", "/generate-art", "Art generation failed");
 }

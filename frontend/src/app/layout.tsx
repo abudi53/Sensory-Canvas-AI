@@ -5,8 +5,8 @@ import "./globals.css";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import { ThemeProvider } from "@/components/theme-provider";
-import { getCurrentUser } from "@/lib/auth";
 import { SoundControlProvider } from "@/context/SoundControlContext";
+import { Toaster } from "@/components/ui/toaster";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,13 +28,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  interface User {
-    username: string;
-    email: string;
-    first_name: string;
-    last_name: string;
-  }
-  const currentUser: User = await getCurrentUser();
+  // const refreshResponse = await refreshTokensAction();
   return (
     <html lang="en" suppressHydrationWarning>
       <body
@@ -46,11 +40,12 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <NavBar user={currentUser} />
+          <NavBar />
           <SoundControlProvider>
             <RootLayoutClient>{children}</RootLayoutClient>
           </SoundControlProvider>
           <Footer />
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>
