@@ -208,7 +208,7 @@ export async function getCurrentUser() {
         sameSite: "lax",
         maxAge: 60 * 60 * 24 * 7, // 1 week
       });
-      return response;
+      return response.json();
     }
   } catch (error: unknown) {
     if (error instanceof Error) {

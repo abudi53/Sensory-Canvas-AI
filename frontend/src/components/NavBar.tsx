@@ -18,13 +18,6 @@ interface User {
   last_name: string;
 }
 
-interface User {
-  username: string;
-  email: string;
-  first_name: string;
-  last_name: string;
-}
-
 import { useEffect, useState } from "react";
 import { getCurrentUser } from "@/app/actions"; // Adjust the import path as needed
 
@@ -56,7 +49,7 @@ const Navbar = () => {
               passHref
             >
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Contact
+                About us
               </NavigationMenuLink>
             </Link>{" "}
             <Link href="/generate-art" legacyBehavior passHref>
@@ -65,21 +58,28 @@ const Navbar = () => {
               </NavigationMenuLink>
             </Link>{" "}
             {user ? (
-              <Link href={"/"} legacyBehavior passHref>
-                <NavigationMenuLink
-                  className={navigationMenuTriggerStyle()}
-                  onClick={async (e) => {
-                    e.preventDefault();
-                    try {
-                      await logoutAction();
-                    } catch (error) {
-                      console.error("Logout failed:", error);
-                    }
-                  }}
-                >
-                  Sign out
-                </NavigationMenuLink>
-              </Link>
+              <>
+                <Link href="/saved-art" legacyBehavior passHref>
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    Saved art
+                  </NavigationMenuLink>
+                </Link>{" "}
+                <Link href={"/"} legacyBehavior passHref>
+                  <NavigationMenuLink
+                    className={navigationMenuTriggerStyle()}
+                    onClick={async (e) => {
+                      e.preventDefault();
+                      try {
+                        await logoutAction();
+                      } catch (error) {
+                        console.error("Logout failed:", error);
+                      }
+                    }}
+                  >
+                    Sign out
+                  </NavigationMenuLink>
+                </Link>
+              </>
             ) : (
               <Link href="/sign-in" legacyBehavior passHref>
                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>

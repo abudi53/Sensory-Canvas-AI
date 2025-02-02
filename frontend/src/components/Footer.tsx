@@ -30,7 +30,9 @@ export default function Footer() {
                     className="w-full justify-start"
                     asChild
                   >
-                    <Link href="/about">About Us</Link>
+                    <Link href="https://portfolio-six-livid-73.vercel.app/">
+                      About Us
+                    </Link>
                   </Button>
                 </li>
                 <li>
