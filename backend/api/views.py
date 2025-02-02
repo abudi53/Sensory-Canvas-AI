@@ -87,3 +87,4 @@ class UserArtsListCreateView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         # Set the user to the currently authenticated user when saving art
         serializer.save(user=self.request.user)
+        

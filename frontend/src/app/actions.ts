@@ -281,3 +281,20 @@ export async function saveArtAction(formData: FormData) {
     );
   }
 }
+
+export async function getSavedArtAction() {
+  const response = await serverClient({
+    endpoint: "/user-arts/",
+    method: "GET",
+  });
+
+  if (response.status === 401) {
+    redirect("/sign-in");
+  }
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch saved arts");
+  }
+
+  return response.json();
+}
