@@ -5,7 +5,6 @@ export const serverClient = async (args: {
   method: "GET" | "POST" | "PUT" | "DELETE";
   body?: object;
 }) => {
-  console.log(args);
   const baseURL = process.env.NEXT_PUBLIC_BACKEND_API_URL;
 
   if (!baseURL) {

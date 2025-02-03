@@ -18,19 +18,11 @@ interface User {
   last_name: string;
 }
 
-import { useEffect, useState } from "react";
-import { getCurrentUser } from "@/app/actions"; // Adjust the import path as needed
+interface UserProps {
+  user?: User;
+}
 
-const Navbar = () => {
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      const user = await getCurrentUser();
-      setUser(user);
-    };
-    fetchUser();
-  }, []);
+const Navbar = ({ user }: UserProps) => {
   return (
     <nav className="sticky top-0 z-10 shadow-md flex w-full justify-between max-w-full bg-inherit">
       <NavigationMenu className="flex p-4 px-10 w-full justify-between max-w-full">

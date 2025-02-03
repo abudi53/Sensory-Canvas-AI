@@ -188,27 +188,6 @@ export async function getCurrentUser() {
 
     if (response.ok) {
       return response.json();
-    } else if (response.status === 401) {
-      const refreshToken = cookieStore.get("refresh_token")?.value;
-      const refreshResponse = await serverClient({
-        endpoint: "/token/refresh/",
-        method: "POST",
-        body: { refresh: refreshToken },
-      });
-
-      if (!refreshResponse || !refreshResponse.ok) {
-        return null;
-      }
-
-      const { access } = await refreshResponse.json();
-      cookieStore.set("access_token", access, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        path: "/",
-        sameSite: "lax",
-        maxAge: 60 * 60 * 24 * 7, // 1 week
-      });
-      return response.json();
     }
   } catch (error: unknown) {
     if (error instanceof Error) {
