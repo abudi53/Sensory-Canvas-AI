@@ -36,8 +36,7 @@ const GenerateArtForm: React.FC = () => {
     } catch (err: unknown) {
       toast({
         title: "Error generating art",
-        description:
-          err instanceof Error ? err.message : "An unexpected error occurred.",
+        description: err instanceof Error ? err.message : "Please, try again.",
         variant: "destructive",
       });
     } finally {
