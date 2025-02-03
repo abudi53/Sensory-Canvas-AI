@@ -35,15 +35,6 @@ const Navbar = ({ user }: UserProps) => {
         </NavigationMenuList>
         <NavigationMenuList className="flex space-x-4">
           <NavigationMenuItem>
-            <Link
-              href="https://portfolio-six-livid-73.vercel.app/"
-              legacyBehavior
-              passHref
-            >
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                About us
-              </NavigationMenuLink>
-            </Link>{" "}
             <Link href="/generate-art" legacyBehavior passHref>
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                 Generate Art

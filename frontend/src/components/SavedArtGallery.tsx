@@ -51,7 +51,7 @@ const SavedArtGallery: React.FC<SavedArtGalleryProps> = ({ arts }) => {
   };
 
   return (
-    <div className="flex min-h-[80vh] w-full bg-zinc-900 pb-8">
+    <div className="flex min-h-[80vh] w-full dark:bg-zinc-900 bg-zinc-100 pb-8">
       <div>
         <ScrollArea className="h-[80vh] flex flex-col space-y-4 gap-8">
           {artList.map((art) => (
