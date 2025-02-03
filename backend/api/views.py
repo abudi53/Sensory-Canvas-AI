@@ -88,3 +88,10 @@ class UserArtsListCreateView(generics.ListCreateAPIView):
         # Set the user to the currently authenticated user when saving art
         serializer.save(user=self.request.user)
         
+class UserArtDestroyView(generics.DestroyAPIView):
+    serializer_class = GeneratedArtSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        # Only allow deletion of the logged-in user's art
+        return GeneratedArt.objects.filter(user=self.request.user)

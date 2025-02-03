@@ -277,3 +277,14 @@ export async function getSavedArtAction() {
 
   return response.json();
 }
+
+export async function deleteArtAction(id: number) {
+  const response = await serverClient({
+    endpoint: `/user-arts/${id}/delete/`,
+    method: "DELETE",
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to delete art");
+  }
+}

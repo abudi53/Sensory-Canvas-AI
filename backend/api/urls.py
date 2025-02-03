@@ -11,5 +11,7 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'), # Token refresh endpoint (from simplejwt)
     path('user-arts/', views.UserArtsListCreateView.as_view(), name='user-arts'),
     path('user/', views.UserDetailView.as_view(), name='user_detail'),
+    path('user-arts/<int:pk>/delete/', views.UserArtDestroyView.as_view(), name='art-delete'),
+
 ]
 
