@@ -18,9 +18,9 @@ export async function middleware(req: NextRequest) {
         path: "/",
       });
       return res;
-    } else {
-      // If refresh fails, redirect to sign-in page.
-      return NextResponse.redirect(new URL("/sign-in", req.url));
+      // } else {
+      //   // If refresh fails, redirect to sign-in page.
+      //   return NextResponse.redirect(new URL("/sign-in", req.url));
     }
   }
 

@@ -26,8 +26,8 @@ def generate_image(request):
         return Response({'error': 'No prompt provided'}, status=400)
     
     try:
-        width = 1280   # Width in pixels (16 units)
-        height = 720  # Height in pixels (9 units)
+        width = 640   # Width in pixels (16 units)
+        height = 352  # Height in pixels (9 units)
         
         # Generate the image with specified dimensions
         image = client.text_to_image(prompt, width=width, height=height)

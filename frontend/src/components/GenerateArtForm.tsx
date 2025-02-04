@@ -15,18 +15,20 @@ const GenerateArtForm: React.FC = () => {
     string | null
   >(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
     if (!prompt.trim()) {
-      setError("Please enter a prompt.");
+      toast({
+        title: "Invalid prompt",
+        description: "Please enter a prompt to generate art.",
+        variant: "destructive",
+      });
       return;
     }
 
     setLoading(true);
-    setError(null);
     setGeneratedImageBase64(null); // Clear previous image
 
     try {
@@ -34,11 +36,31 @@ const GenerateArtForm: React.FC = () => {
 
       setGeneratedImageBase64(response.image);
     } catch (err: unknown) {
-      toast({
-        title: "Error generating art",
-        description: err instanceof Error ? err.message : "Please, try again.",
-        variant: "destructive",
-      });
+      if (err instanceof Error && err.message.includes("500")) {
+        // Retry after 2 seconds if error contains '500'
+        setTimeout(async () => {
+          try {
+            const retryResponse = await generateArtAction(prompt);
+            setGeneratedImageBase64(retryResponse.image);
+          } catch (retryErr: unknown) {
+            toast({
+              title: "Error generating art",
+              description:
+                retryErr instanceof Error
+                  ? retryErr.message
+                  : "Please, try again.",
+              variant: "destructive",
+            });
+          }
+        }, 2000);
+      } else {
+        toast({
+          title: "Error generating art",
+          description:
+            err instanceof Error ? err.message : "Please, try again.",
+          variant: "destructive",
+        });
+      }
     } finally {
       setLoading(false);
     }
@@ -46,7 +68,11 @@ const GenerateArtForm: React.FC = () => {
 
   const handleSaveArt = async () => {
     if (!prompt.trim() || !generatedImageBase64) {
-      setError("No art to save. Please generate art first.");
+      toast({
+        title: "Invalid art",
+        description: "Please generate art first.",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -109,15 +135,6 @@ const GenerateArtForm: React.FC = () => {
         <p>(Sound generation api still not available)</p>
       </form>
       <div>
-        {error && (
-          <div
-            className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
-            role="alert"
-          >
-            <strong className="font-bold">Error!</strong>
-            <span className="block sm:inline ml-1">{error}</span>
-          </div>
-        )}
         {loading && <Skeleton className="w-full h-[50vh] rounded-xl mt-4" />}
         {generatedImageBase64 && (
           <div className="mt-4">
