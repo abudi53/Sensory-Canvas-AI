@@ -33,35 +33,16 @@ const GenerateArtForm: React.FC = () => {
 
     try {
       const response = await generateArtAction(prompt);
-
-      setGeneratedImageBase64(response.image);
+      console.log("Generated image response:", response);
+      setGeneratedImageBase64(response);
     } catch (err: unknown) {
       console.error("Error generating art:", err);
-      if (err instanceof Error && err.message.includes("500")) {
-        // Retry after 2 seconds if error contains '500'
-        setTimeout(async () => {
-          try {
-            const retryResponse = await generateArtAction(prompt);
-            setGeneratedImageBase64(retryResponse.image);
-          } catch (retryErr: unknown) {
-            toast({
-              title: "Error generating art",
-              description:
-                retryErr instanceof Error
-                  ? retryErr.message
-                  : "Please, try again.",
-              variant: "destructive",
-            });
-          }
-        }, 2000);
-      } else {
         toast({
           title: "Error generating art",
           description:
             err instanceof Error ? err.message : "Please, try again.",
           variant: "destructive",
         });
-      }
     } finally {
       setLoading(false);
     }

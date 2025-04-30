@@ -38,6 +38,7 @@ export const serverClient = async (args: {
   }
 
   try {
+    console.log(`Fetching ${args.method} ${baseURL}${args.endpoint}`);
     const response = await fetch(`${baseURL}${args.endpoint}`, fetchOptions);
     return response;
   } catch (error) {

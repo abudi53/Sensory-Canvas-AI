@@ -198,10 +198,15 @@ export async function getCurrentUser() {
 }
 
 export async function generateArtAction(prompt: string) {
+  // Encode the prompt and append it as a query parameter
+  const endpointWithQuery = `image/generate?prompt=${encodeURIComponent(
+    prompt
+  )}`;
+
   const response = await serverClient({
-    endpoint: "/image/generate",
+    endpoint: endpointWithQuery, // Use the endpoint with the query string
     method: "GET",
-    body: { prompt },
+    // Remove the body property for GET requests
   });
 
   if (!response.ok) {
