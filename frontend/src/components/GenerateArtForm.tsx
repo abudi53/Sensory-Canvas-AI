@@ -36,6 +36,7 @@ const GenerateArtForm: React.FC = () => {
 
       setGeneratedImageBase64(response.image);
     } catch (err: unknown) {
+      console.error("Error generating art:", err);
       if (err instanceof Error && err.message.includes("500")) {
         // Retry after 2 seconds if error contains '500'
         setTimeout(async () => {

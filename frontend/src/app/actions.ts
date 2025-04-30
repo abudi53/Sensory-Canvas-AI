@@ -197,37 +197,10 @@ export async function getCurrentUser() {
   }
 }
 
-// export async function refreshTokensAction() {
-//   const cookieStore = await cookies();
-//   const refreshToken = cookieStore.get("refresh_token")?.value;
-
-//   if (!refreshToken) {
-//     return encodedRedirect("error", "/sign-in", "No refresh token found.");
-//   }
-
-//   try {
-//     const response = await serverClient({
-//       endpoint: "/token/refresh/",
-//       method: "POST",
-//       body: { refresh: refreshToken },
-//     });
-
-//     if (!response.ok) {
-//       return encodedRedirect("error", "/sign-in", "Token refresh failed.");
-//     } else {
-//       return response;
-//     }
-//   } catch (error: unknown) {
-//     if (error instanceof Error) {
-//       return encodedRedirect("error", "/sign-in", "refresh action");
-//     }
-//   }
-// }
-
 export async function generateArtAction(prompt: string) {
   const response = await serverClient({
-    endpoint: "/generate-image/",
-    method: "POST",
+    endpoint: "/image/generate",
+    method: "GET",
     body: { prompt },
   });
 
