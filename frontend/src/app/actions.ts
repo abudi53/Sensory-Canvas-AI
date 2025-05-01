@@ -90,30 +90,30 @@ export async function registerAction(formData: FormData) {
     });
 
     if (!registerResponse.ok) {
-      const errorData: Record<string, string[]> = await registerResponse.json();
-      console.log("Registration errorData", errorData);
+      console.log("Registration error response:", registerResponse);
+      let errorMessage = "Registration failed due to a server error."; // Default message
 
-      // Handle specific error messages
-      if (errorData["password"] && errorData["password"][0]) {
-        return encodedRedirect("error", "/sign-up", errorData["password"][0]);
-      }
-      if (errorData["username"] && errorData["username"][0]) {
-        return encodedRedirect("error", "/sign-up", errorData["username"][0]);
-      }
-       if (errorData["email"] && errorData["email"][0]) {
-        return encodedRedirect("error", "/sign-up", errorData["email"][0]);
+      try {
+          const errorData = await registerResponse.json(); // Use a more flexible type like Record<string, any> or a specific interface
+          console.log("Registration error data (JSON):", errorData);
+
+          // Check if errorData exists and has a 'detail' property which is a string
+          if (errorData && typeof errorData.detail === 'string') {
+            errorMessage = errorData.detail; // Use the detail string directly
+          } else {
+             // Fallback if detail is missing, not a string, or errorData is null/undefined
+             errorMessage = "Registration failed. Please try again.";
+          }
+      } catch (e) {
+        // Catch errors during body parsing (JSON or text)
+        console.error("Could not parse registration error response body:", e);
+        errorMessage = `Registration failed (Status: ${registerResponse.status}). Could not read error details.`;
       }
 
-      // Fallback: show first available message or a default error
-      const errorMessage =
-        Object.values(errorData)[0]?.[0] || "Registration failed.";
       return encodedRedirect("error", "/sign-up", errorMessage);
     }
 
     // 2. Registration successful, now automatically log the user in
-    console.log("Registration successful, attempting automatic login...");
-
-    // Create FormData for loginAction
     const loginFormData = new FormData();
     loginFormData.append("username", username);
     loginFormData.append("password", password);
