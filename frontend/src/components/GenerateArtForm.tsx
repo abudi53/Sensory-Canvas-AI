@@ -33,7 +33,6 @@ const GenerateArtForm: React.FC = () => {
 
     try {
       const response = await generateArtAction(prompt);
-      console.log("Generated image response:", response);
       setGeneratedImageBase64(response);
     } catch (err: unknown) {
       console.error("Error generating art:", err);

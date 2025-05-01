@@ -4,8 +4,10 @@ export const serverClient = async (args: {
   endpoint: string;
   method: "GET" | "POST" | "PUT" | "DELETE";
   body?: object;
+  contentType?: "application/json" | "application/x-www-form-urlencoded"; // Add contentType argument
 }) => {
   const baseURL = process.env.NEXT_PUBLIC_BACKEND_API_URL;
+  const effectiveContentType = args.contentType || "application/json"; // Default to JSON
 
   if (!baseURL) {
     throw new Error("NEXT_PUBLIC_BACKEND_API_URL is not defined.");
@@ -16,7 +18,7 @@ export const serverClient = async (args: {
 
   // Initialize headers with Content-Type and Cookie
   const headers: Record<string, string> = {
-    "Content-Type": "application/json",
+    "Content-Type": effectiveContentType, // Use the effective content type
     Cookie: cookieStore.toString(),
   };
 
@@ -34,11 +36,24 @@ export const serverClient = async (args: {
 
   // Add body if present and method is not GET
   if (args.body && args.method !== "GET") {
-    fetchOptions.body = JSON.stringify(args.body);
+    if (effectiveContentType === "application/x-www-form-urlencoded") {
+      // Encode body as URL-encoded string
+      fetchOptions.body = new URLSearchParams(
+        args.body as Record<string, string>
+      ).toString();
+      console.log(`Fetching ${args.method} ${baseURL}${args.endpoint}, with form data:`, fetchOptions.body);
+    } else {
+      // Default to JSON encoding
+      fetchOptions.body = JSON.stringify(args.body);
+      console.log(`Fetching ${args.method} ${baseURL}${args.endpoint}, with JSON body:`, args.body);
+    }
+  } else {
+      console.log(`Fetching ${args.method} ${baseURL}${args.endpoint} without body`);
   }
 
+
   try {
-    console.log(`Fetching ${args.method} ${baseURL}${args.endpoint}`);
+    // console.log(`Fetching ${args.method} ${baseURL}${args.endpoint}, with body:`, args.body); // Log moved above
     const response = await fetch(`${baseURL}${args.endpoint}`, fetchOptions);
     return response;
   } catch (error) {

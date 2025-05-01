@@ -7,20 +7,24 @@ import { redirect } from "next/navigation";
 
 export async function loginAction(formData: FormData): Promise<void> {
   const response = await serverClient({
-    endpoint: "/login/",
+    endpoint: "auth/token",
     method: "POST",
     body: {
-      username: formData.get("username"),
-      password: formData.get("password"),
+      username: formData.get("username") as string, // Ensure values are strings for URLSearchParams
+      password: formData.get("password") as string,
     },
+    contentType: "application/x-www-form-urlencoded", // Specify the content type
   });
 
+  
+  
   const data = await response.json();
+  console.log(data);
 
   if (response.ok) {
     const cookieStore = await cookies();
 
-    cookieStore.set("access_token", data.access, {
+    cookieStore.set("access_token", data.access_token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       path: "/",
@@ -28,19 +32,33 @@ export async function loginAction(formData: FormData): Promise<void> {
       maxAge: 60 * 60 * 24 * 7, // 1 week
     });
 
-    cookieStore.set("refresh_token", data.refresh, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      path: "/",
-      sameSite: "lax",
-      maxAge: 60 * 60 * 24 * 7,
-    });
+    // cookieStore.set("refresh_token", data.refresh, {
+    //   httpOnly: true,
+    //   secure: process.env.NODE_ENV === "production",
+    //   path: "/",
+    //   sameSite: "lax",
+    //   maxAge: 60 * 60 * 24 * 7,
+    // });
 
     // Explicit return after setting cookies
     return redirect("/");
   }
 
-  return encodedRedirect("error", "/sign-in", "Login failed");
+  // Handle potential error response from the server if login fails
+  let errorMessage = "Login failed";
+  try {
+    // Attempt to parse error details if the server sends JSON
+    const errorData = await response.json();
+    if (errorData && errorData.detail) {
+        errorMessage = errorData.detail;
+    }
+  } catch (e) {
+      // If parsing fails or no detail, use the default message
+      console.error("Could not parse error response:", e);
+  }
+
+
+  return encodedRedirect("error", "/sign-in", errorMessage);
 }
 
 export async function registerAction(formData: FormData) {
@@ -58,20 +76,32 @@ export async function registerAction(formData: FormData) {
     );
   }
 
+  // Basic client-side password match check (optional but good UX)
+  if (password !== password2) {
+    return encodedRedirect("error", "/sign-up", "Passwords do not match.");
+  }
+
   try {
     // 1. Register the user
     const registerResponse = await serverClient({
-      endpoint: "/register/",
+      endpoint: "auth/",
       method: "POST",
-      body: { username, email, password, password2 },
+      body: { username, email, password }, // Send only necessary fields for registration
     });
 
     if (!registerResponse.ok) {
       const errorData: Record<string, string[]> = await registerResponse.json();
+      console.log("Registration errorData", errorData);
 
-      // Handle specific error messages, e.g., password mismatch
+      // Handle specific error messages
       if (errorData["password"] && errorData["password"][0]) {
         return encodedRedirect("error", "/sign-up", errorData["password"][0]);
+      }
+      if (errorData["username"] && errorData["username"][0]) {
+        return encodedRedirect("error", "/sign-up", errorData["username"][0]);
+      }
+       if (errorData["email"] && errorData["email"][0]) {
+        return encodedRedirect("error", "/sign-up", errorData["email"][0]);
       }
 
       // Fallback: show first available message or a default error
@@ -80,58 +110,34 @@ export async function registerAction(formData: FormData) {
       return encodedRedirect("error", "/sign-up", errorMessage);
     }
 
-    // 2. Automatic login after successful registration
-    const loginResponse = await serverClient({
-      endpoint: "/login/",
-      method: "POST",
-      body: { username, password },
-    });
+    // 2. Registration successful, now automatically log the user in
+    console.log("Registration successful, attempting automatic login...");
 
-    if (!loginResponse.ok) {
-      // If login fails after successful registration
-      return encodedRedirect(
-        "success",
-        "/sign-in", // Redirect to login page instead
-        "Registration successful! Please log in."
-      );
-    }
+    // Create FormData for loginAction
+    const loginFormData = new FormData();
+    loginFormData.append("username", username);
+    loginFormData.append("password", password);
 
-    // 3. Set tokens and handle cookies
-    const { access, refresh } = await loginResponse.json();
-    const cookieStore = await cookies();
+    await loginAction(loginFormData);
 
-    cookieStore.set("access_token", access, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      path: "/",
-      sameSite: "lax",
-    });
-
-    cookieStore.set("refresh_token", refresh, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      path: "/",
-      sameSite: "lax",
-    });
-
-    // Direct return for successful flow
-    return redirect("/");
   } catch (error: unknown) {
-    // Check if the error is a Next.js redirect and rethrow it
+    // Check if the error is a Next.js redirect (potentially from loginAction) and rethrow it
     if (error instanceof Error && error.message.startsWith("NEXT_REDIRECT")) {
       throw error;
     }
 
-    // Handle specific error types
+    // Handle specific error types during registration phase
     if (error instanceof Error) {
+      console.error("Registration process error:", error);
       return encodedRedirect("error", "/sign-up", error.message);
     }
 
-    // Handle generic errors
+    // Handle generic errors during registration phase
+    console.error("Unexpected registration error:", error);
     return encodedRedirect(
       "error",
       "/sign-up",
-      "An unexpected error occurred. Please try again."
+      "An unexpected error occurred during registration. Please try again."
     );
   }
 }
