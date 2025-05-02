@@ -14,8 +14,6 @@ import { logoutAction } from "@/app/actions";
 interface User {
   username: string;
   email: string;
-  first_name: string;
-  last_name: string;
 }
 
 interface UserProps {

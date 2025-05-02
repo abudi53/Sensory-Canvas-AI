@@ -144,37 +144,12 @@ export async function registerAction(formData: FormData) {
 
 export async function logoutAction() {
   const cookieStore = await cookies();
-  // try {
-  const refreshToken = cookieStore.get("refresh_token")?.value;
 
-  // Only attempt server logout if refresh token exists
-  if (refreshToken) {
-    const response = await serverClient({
-      endpoint: "/logout/",
-      method: "POST",
-      body: { refresh_token: refreshToken },
-    });
-
-    // Handle specific token expiration error (401 Unauthorized)
-    if (response.status === 401) {
-      console.log("Token already expired, proceeding with client-side cleanup");
-    } else if (!response.ok) {
-      console.error("Logout failed:", await response.text());
-    }
-  }
-
-  // Always clear cookies regardless of token state
   cookieStore.set("access_token", "", {
     maxAge: -1,
     path: "/",
     secure: process.env.NODE_ENV === "production",
   });
-  cookieStore.set("refresh_token", "", {
-    maxAge: -1,
-    path: "/",
-    secure: process.env.NODE_ENV === "production",
-  });
-
   return redirect("/sign-in");
 }
 
@@ -183,23 +158,29 @@ export async function getCurrentUser() {
   const accessToken = cookieStore.get("access_token")?.value;
 
   if (!accessToken) {
+    console.log("getCurrentUser: No access token found.");
     return null;
   }
 
   try {
     const response = await serverClient({
-      endpoint: "/user/",
+      endpoint: "users/me",
       method: "GET",
     });
 
     if (response.ok) {
-      return response.json();
+      const data = await response.json();
+      console.log("getCurrentUser: User data fetched successfully.");
+      return data; // Return user data on success
+    } else {
+      // Handle non-OK responses (like 401 Unauthorized)
+      console.error(`getCurrentUser: Failed with status ${response.status}`);
+      return null;
     }
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      // return encodedRedirect("error", "/sign-in", "error");
-      console.error("getCurrentUser error:", error);
-    }
+    // Handle network errors or other exceptions during the fetch
+    console.error("getCurrentUser error during fetch:", error);
+    return null; 
   }
 }
 
