@@ -207,11 +207,11 @@ export async function generateArtAction(prompt: string) {
 
 export async function saveArtAction(formData: FormData) {
   const response = await serverClient({
-    endpoint: "/user-arts/",
+    endpoint: "image/save",
     method: "POST",
     body: {
-      prompt: formData.get("prompt"),
       image_base64: formData.get("image_base64"),
+      prompt: formData.get("prompt"),
     },
   });
 

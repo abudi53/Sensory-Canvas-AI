@@ -14,7 +14,8 @@ const GenerateArtForm: React.FC = () => {
   const [generatedImageBase64, setGeneratedImageBase64] = useState<
     string | null
   >(null);
-  const [loading, setLoading] = useState(false);
+  const [loadingImage, setLoadingImage] = useState(false);
+  const [LoadingSave, setLoadingSave] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -28,7 +29,7 @@ const GenerateArtForm: React.FC = () => {
       return;
     }
 
-    setLoading(true);
+    setLoadingImage(true);
     setGeneratedImageBase64(null); // Clear previous image
 
     try {
@@ -43,7 +44,7 @@ const GenerateArtForm: React.FC = () => {
           variant: "destructive",
         });
     } finally {
-      setLoading(false);
+      setLoadingImage(false);
     }
   };
 
@@ -56,6 +57,7 @@ const GenerateArtForm: React.FC = () => {
       });
       return;
     }
+    setLoadingSave(true);
 
     try {
       const formData = new FormData();
@@ -85,6 +87,8 @@ const GenerateArtForm: React.FC = () => {
           variant: "destructive",
         });
       }
+    } finally {
+      setLoadingSave(false);
     }
   };
 
@@ -109,14 +113,14 @@ const GenerateArtForm: React.FC = () => {
         <Button
           type="submit"
           className="bg-primary font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          disabled={loading}
+          disabled={loadingImage}
         >
-          {loading ? "Generating..." : "Generate Art"}
+          {loadingImage ? "Generating..." : "Generate Art"}
         </Button>
         <p>(Sound generation api still not available)</p>
       </form>
       <div>
-        {loading && <Skeleton className="w-full h-[50vh] rounded-xl mt-4" />}
+        {loadingImage && <Skeleton className="w-full h-[50vh] rounded-xl mt-4" />}
         {generatedImageBase64 && (
           <div className="mt-4">
             <h2 className="text-lg font-semibold mb-2">Generated Image:</h2>
@@ -127,8 +131,8 @@ const GenerateArtForm: React.FC = () => {
               width={1280}
               height={720}
             />
-            <Button className="font-bold mt-2" onClick={handleSaveArt}>
-              Save Art
+            <Button className="font-bold mt-2" onClick={handleSaveArt} disabled={LoadingSave}>
+              {LoadingSave ? "Saving..." : "Save Art"}
             </Button>
           </div>
         )}

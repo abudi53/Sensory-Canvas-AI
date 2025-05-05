@@ -41,11 +41,11 @@ export const serverClient = async (args: {
       fetchOptions.body = new URLSearchParams(
         args.body as Record<string, string>
       ).toString();
-      console.log(`Fetching ${args.method} ${baseURL}${args.endpoint}, with form data:`, fetchOptions.body);
+      // console.log(`Fetching ${args.method} ${baseURL}${args.endpoint}, with form data:`, fetchOptions.body);
     } else {
       // Default to JSON encoding
       fetchOptions.body = JSON.stringify(args.body);
-      console.log(`Fetching ${args.method} ${baseURL}${args.endpoint}, with JSON body:`, args.body);
+      // console.log(`Fetching ${args.method} ${baseURL}${args.endpoint}, with JSON body:`, args.body);
     }
   } else {
       console.log(`Fetching ${args.method} ${baseURL}${args.endpoint} without body`);
