@@ -40,7 +40,7 @@ const GenerateArtForm: React.FC = () => {
         toast({
           title: "Error generating art",
           description:
-            err instanceof Error ? err.message : "Please, try again.",
+            err instanceof Error ? err.message : "An error has occurred with the model. Please, try again.",
           variant: "destructive",
         });
     } finally {

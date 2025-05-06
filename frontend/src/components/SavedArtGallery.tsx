@@ -55,7 +55,7 @@ const SavedArtGallery: React.FC<SavedArtGalleryProps> = ({ arts }) => {
   };
 
   return (
-    <div className="flex min-h-[80vh] w-full dark:bg-zinc-900 bg-zinc-100 pb-8">
+    <div className="flex min-h-[80vh] w-full">
       <div>
         <ScrollArea className="h-[80vh] flex flex-col space-y-4 gap-8">
           {artList.map((art) => (
@@ -100,7 +100,7 @@ const SavedArtGallery: React.FC<SavedArtGalleryProps> = ({ arts }) => {
         </ScrollArea>
       </div>
       <div className="flex-grow-[1] flex flex-col items-center justify-center">
-        <h1 className="text-2xl font-semibold pt-8">Selected Art</h1>
+        {/* <h1 className="text-2xl font-semibold pt-8">Selected Art</h1> */}
         {selectedArt && (
           <>
             <Image
@@ -110,7 +110,7 @@ const SavedArtGallery: React.FC<SavedArtGalleryProps> = ({ arts }) => {
               width={640}
               className="pt-8"
             />
-            <h2 className="pt-2 text-xl">{selectedArt.prompt}</h2>
+            <h2 className="pt-2 text-xl mb-8">{selectedArt.prompt}</h2>
           </>
         )}
       </div>
