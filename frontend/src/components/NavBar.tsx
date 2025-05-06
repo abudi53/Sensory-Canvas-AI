@@ -27,7 +27,7 @@ const Navbar = ({ user }: UserProps) => {
         <NavigationMenuList className="flex space-x-4">
           <NavigationMenuItem>
             <Link href="/" passHref>
-              <h1 className="text-xl font-bold">Sensory Canvas AI 🎨</h1>
+              <h1 className="text-xl font-bold">Sensory Canvas AI</h1>
             </Link>
           </NavigationMenuItem>
         </NavigationMenuList>
