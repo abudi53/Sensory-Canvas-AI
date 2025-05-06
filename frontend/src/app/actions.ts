@@ -228,7 +228,7 @@ export async function saveArtAction(formData: FormData) {
 
 export async function getSavedArtAction() {
   const response = await serverClient({
-    endpoint: "/user-arts/",
+    endpoint: "image/me",
     method: "GET",
   });
 
@@ -239,8 +239,10 @@ export async function getSavedArtAction() {
   if (!response.ok) {
     throw new Error("Failed to fetch saved arts");
   }
+  const data = await response.json();
+  console.log("getSavedArtAction: Fetched saved arts:", data);
+  return data; // Return the parsed JSON data
 
-  return response.json();
 }
 
 export async function deleteArtAction(id: number) {

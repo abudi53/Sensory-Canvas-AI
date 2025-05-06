@@ -16,7 +16,7 @@ import { deleteArtAction } from "@/app/actions"; // adjust the import as needed
 interface SavedArt {
   id: number;
   prompt: string;
-  image_base64: string;
+  image_url: string;
 }
 
 interface SavedArtGalleryProps {
@@ -26,7 +26,7 @@ interface SavedArtGalleryProps {
 const SavedArtGallery: React.FC<SavedArtGalleryProps> = ({ arts }) => {
   const { toast } = useToast();
   const [artList, setArtList] = useState<SavedArt[]>(arts);
-  const [selectedArt, setSelectedArt] = useState<SavedArt>(arts[0]);
+  const [selectedArt, setSelectedArt] = useState<SavedArt | null>(arts.length > 0 ? arts[0] : null);
 
   const handleDelete = async (id: number) => {
     try {
@@ -37,8 +37,8 @@ const SavedArtGallery: React.FC<SavedArtGalleryProps> = ({ arts }) => {
         title: "Art deleted",
         description: "The art has been deleted successfully.",
       });
-      if (selectedArt.id === id && newList.length > 0) {
-        setSelectedArt(newList[0]);
+      if (selectedArt?.id === id) {
+        setSelectedArt(newList.length > 0 ? newList[0] : null);
       }
     } catch (error) {
       console.error("Error deleting art:", error);
@@ -50,6 +50,10 @@ const SavedArtGallery: React.FC<SavedArtGalleryProps> = ({ arts }) => {
     }
   };
 
+  const handleSelectArt = (art: SavedArt) => {
+    setSelectedArt(art);
+  };
+
   return (
     <div className="flex min-h-[80vh] w-full dark:bg-zinc-900 bg-zinc-100 pb-8">
       <div>
@@ -58,14 +62,14 @@ const SavedArtGallery: React.FC<SavedArtGalleryProps> = ({ arts }) => {
             <div
               key={art.id}
               className="relative cursor-pointer h-[130px] ml-4 mr-3 pr-1 mt-4 transition-opacity duration-300 hover:opacity-20"
-              onClick={() => setSelectedArt(art)}
+              onClick={() => handleSelectArt(art)}
             >
               <Image
-                src={`data:image/png;base64,${art.image_base64}`}
-                alt={art.prompt}
-                height={130}
-                width={240}
-                className="object-cover"
+                src={art.image_url}
+                alt={art.prompt.substring(0, 20) + "..."}
+                width={150}
+                height={90}
+                className="object-cover w-full h-full rounded-lg"
               />
               <div className="absolute top-1 right-2">
                 <Popover>
@@ -100,7 +104,7 @@ const SavedArtGallery: React.FC<SavedArtGalleryProps> = ({ arts }) => {
         {selectedArt && (
           <>
             <Image
-              src={`data:image/png;base64,${selectedArt.image_base64}`}
+              src={selectedArt.image_url}
               alt={selectedArt.prompt}
               height={360}
               width={640}
