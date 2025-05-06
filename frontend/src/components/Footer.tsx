@@ -44,25 +44,18 @@ export default function Footer() {
                     <Link href="/generate-art">Generate Art</Link>
                   </Button>
                 </li>
+                <li>
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start"
+                    asChild
+                  >
+                    <Link href="/privacy-policy">Privacy Policy</Link>
+                  </Button>
+                </li>
               </ul>
             </div>
 
-            {/* Newsletter
-            <div className="space-y-4">
-              <h4 className="text-sm font-medium">Stay Updated</h4>
-              <form className="flex gap-2">
-                <Input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="max-w-[200px]"
-                />
-                <Button type="submit" size="sm">
-                  Subscribe
-                </Button>
-              </form>
-            </div> */}
-
-            {/* Social Media */}
             <div className="space-y-4">
               <h4 className="text-sm font-medium">Connect With Us</h4>
               <div className="flex space-x-4">
